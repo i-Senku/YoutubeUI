@@ -23,6 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.rootViewController = UINavigationController(rootViewController: HomeController(collectionViewLayout: layout))
              self.window = window
             
+            
              window.makeKeyAndVisible()
          }
     }
