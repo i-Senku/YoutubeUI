@@ -15,6 +15,21 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    let animationMenu : UIView = {
+       let view = UIView()
+        view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        return view
+    }()
+    
+    let settingsView : UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    let windowKey = UIApplication.shared.windows.filter{$0.isKeyWindow}.first
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,11 +57,12 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     }
     
     func setupBarItem(){
+        
         let searchImage = UIImage(systemName: "magnifyingglass")
         let showMenuImage = UIImage(systemName: "equal.square.fill")
         
         let searchBarItem = UIBarButtonItem(image: searchImage, style: .plain, target: self, action: #selector(searchHandler))
-        let showMenuBarItem = UIBarButtonItem(image: showMenuImage, style: .plain, target: self, action: #selector(searchHandler))
+        let showMenuBarItem = UIBarButtonItem(image: showMenuImage, style: .plain, target: self, action: #selector(showMenu))
         searchBarItem.tintColor = UIColor.white
         showMenuBarItem.tintColor = UIColor.white
         navigationItem.rightBarButtonItems = [showMenuBarItem,searchBarItem]
@@ -54,7 +70,34 @@ class HomeController: UICollectionViewController,UICollectionViewDelegateFlowLay
     
     @objc func searchHandler(){
         print("Click Search Button")
+
     }
+    
+     @objc func showMenu(){
+        
+        windowKey?.addSubview(animationMenu)
+        windowKey?.addSubview(settingsView)
+        settingsView.frame = CGRect(x: 0, y: windowKey!.frame.height, width: windowKey!.frame.width, height: 200)
+        
+        animationMenu.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(closeMenu)))
+        animationMenu.frame = windowKey!.frame
+        animationMenu.alpha = 0
+        
+        UIView.animate(withDuration: 0.5){
+            self.animationMenu.alpha = 1
+            self.settingsView.frame = CGRect(x: 0, y: self.windowKey!.frame.height - 200, width: self.settingsView.frame.width, height: self.settingsView.frame.height)
+        }
+    }
+    
+     @objc func closeMenu(){
+        print("Tıklandı")
+        UIView.animate(withDuration: 0.5){
+            self.animationMenu.alpha = 0
+            self.settingsView.frame = CGRect(x: 0, y: self.windowKey!.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+        }
+    }
+    
+    
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 5
